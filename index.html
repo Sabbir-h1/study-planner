@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSC A+ Study Planner 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0f4ff;
+  --muted: #8892aa;
+  --dim: #4a5568;
+  --blue: #4f8ef7;
+  --blue-dim: rgba(79,142,247,0.12);
+  --blue-bright: #7ab3ff;
+  --amber: #f0a940;
+  --amber-dim: rgba(240,169,64,0.12);
+  --green: #3ecf8e;
+  --green-dim: rgba(62,207,142,0.12);
+  --red: #f06060;
+  --red-dim: rgba(240,96,96,0.12);
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.12);
+  --teal: #2dd4bf;
+  --teal-dim: rgba(45,212,191,0.12);
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--bg);color:var(--text);font-family:'Sora',sans-serif;font-size:14px;min-height:100vh;overflow-x:hidden}
+.noise{position:fixed;inset:0;pointer-events:none;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");z-index:9999}
+
+/* header */
+header{background:linear-gradient(135deg,#0d1b3e 0%,#0a0e1a 60%);border-bottom:1px solid var(--border);padding:20px 16px 16px;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px)}
+.header-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.header-title{font-size:18px;font-weight:700;letter-spacing:-0.5px;line-height:1.2}
+.header-title span{color:var(--blue)}
+.header-sub{font-size:11px;color:var(--muted);margin-top:3px;font-family:'JetBrains Mono',monospace}
+.countdown-pill{background:var(--blue-dim);border:1px solid rgba(79,142,247,0.25);border-radius:999px;padding:6px 14px;text-align:center;flex-shrink:0}
+.countdown-num{font-size:22px;font-weight:700;color:var(--blue);line-height:1;font-family:'JetBrains Mono',monospace}
+.countdown-label{font-size:10px;color:var(--blue);opacity:.7;margin-top:1px}
+
+/* tabs */
+.tabs-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.tabs-scroll::-webkit-scrollbar{display:none}
+.tab{flex-shrink:0;padding:7px 14px;border-radius:999px;border:1px solid var(--border2);font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s;white-space:nowrap}
+.tab.active{background:var(--blue);border-color:var(--blue);color:#fff}
+
+/* content */
+.content{padding:16px;max-width:600px;margin:0 auto}
+.section{display:none}.section.active{display:block}
+
+/* stat grid */
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;font-family:'JetBrains Mono',monospace}
+.stat-val{font-size:26px;font-weight:700;line-height:1;font-family:'JetBrains Mono',monospace}
+.stat-val.blue{color:var(--blue)}.stat-val.green{color:var(--green)}.stat-val.amber{color:var(--amber)}.stat-val.purple{color:var(--purple)}
+
+/* cards */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.card-title{font-size:14px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card-title::before{content:'';display:block;width:3px;height:14px;border-radius:2px;background:var(--blue);flex-shrink:0}
+
+/* priority rows */
+.prow{display:flex;align-items:center;gap:8px;padding:9px 0;border-bottom:1px solid var(--border)}
+.prow:last-child{border-bottom:none}
+.prow-name{font-size:13px;font-weight:500;flex:1;min-width:0}
+.prow-info{font-size:11px;color:var(--muted);flex:1.5;min-width:0;line-height:1.4}
+.pill{display:inline-block;font-size:10px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;font-family:'JetBrains Mono',monospace}
+.pill-r{background:var(--red-dim);color:var(--red);border:1px solid rgba(240,96,96,.2)}
+.pill-a{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(240,169,64,.2)}
+.pill-b{background:var(--blue-dim);color:var(--blue-bright);border:1px solid rgba(79,142,247,.2)}
+.pill-g{background:var(--green-dim);color:var(--green);border:1px solid rgba(62,207,142,.2)}
+.pill-p{background:var(--purple-dim);color:var(--purple);border:1px solid rgba(167,139,250,.2)}
+.pill-t{background:var(--teal-dim);color:var(--teal);border:1px solid rgba(45,212,191,.2)}
+
+/* alert tip */
+.tip{background:linear-gradient(135deg,rgba(79,142,247,.08),rgba(79,142,247,.03));border:1px solid rgba(79,142,247,.2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--muted);line-height:1.6}
+.tip strong{color:var(--blue-bright)}
+
+/* phases */
+.phase{border-radius:var(--radius);padding:16px;margin-bottom:12px;border:1px solid}
+.phase-blue{background:linear-gradient(135deg,rgba(79,142,247,.08),transparent);border-color:rgba(79,142,247,.25)}
+.phase-amber{background:linear-gradient(135deg,rgba(240,169,64,.08),transparent);border-color:rgba(240,169,64,.25)}
+.phase-purple{background:linear-gradient(135deg,rgba(167,139,250,.08),transparent);border-color:rgba(167,139,250,.25)}
+.phase-green{background:linear-gradient(135deg,rgba(62,207,142,.08),transparent);border-color:rgba(62,207,142,.25)}
+.phase-num{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;font-family:'JetBrains Mono',monospace;margin-bottom:4px;opacity:.6}
+.phase-title{font-size:15px;font-weight:700;margin-bottom:2px}
+.phase-date{font-size:11px;color:var(--muted);margin-bottom:8px;font-family:'JetBrains Mono',monospace}
+.phase-desc{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.6}
+.pills-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.pbar-wrap{margin-top:8px}
+.pbar-bg{height:4px;background:rgba(255,255,255,.06);border-radius:2px}
+.pbar-fill{height:4px;border-radius:2px;transition:width 1s ease}
+.pbar-label{font-size:10px;color:var(--muted);margin-top:4px;font-family:'JetBrains Mono',monospace}
+
+/* schedule slots */
+.schedule-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:12px}
+.schedule-header{padding:12px 16px;border-bottom:1px solid var(--border);font-size:12px;font-weight:600;letter-spacing:.3px;display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.slot{display:flex;gap:12px;padding:10px 16px;border-bottom:1px solid var(--border);align-items:flex-start}
+.slot:last-child{border-bottom:none}
+.slot-time{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted);min-width:72px;padding-top:2px;flex-shrink:0}
+.slot-text{font-size:12px;color:var(--text);line-height:1.5;flex:1}
+.slot-text em{color:var(--amber);font-style:normal;font-weight:500}
+.slot-text strong{color:var(--green);font-weight:500}
+
+/* subject cards */
+.subj-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px}
+.subj-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.subj-name{font-size:14px;font-weight:600}
+.subj-ch{font-size:10px;font-family:'JetBrains Mono',monospace;color:var(--muted);background:var(--surface2);padding:3px 8px;border-radius:999px}
+.subj-body{font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:10px}
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+
+/* tips */
+.tip-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:10px;position:relative;overflow:hidden}
+.tip-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--amber)}
+.tip-card-title{font-size:13px;font-weight:600;margin-bottom:6px;padding-left:0}
+.tip-card-body{font-size:12px;color:var(--muted);line-height:1.65}
+
+/* section title */
+.sec-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;font-family:'JetBrains Mono',monospace;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* bottom cta */
+.cta-wrap{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.cta-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px 12px;font-size:11px;font-weight:600;color:var(--text);cursor:pointer;text-align:center;line-height:1.4;transition:all .2s}
+.cta-btn:hover{border-color:var(--blue);color:var(--blue)}
+.cta-btn-full{grid-column:1/-1}
+
+/* week grid */
+.week-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.week-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px}
+.week-label{font-size:9px;font-family:'JetBrains Mono',monospace;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+.week-title{font-size:12px;font-weight:600;margin-bottom:6px}
+.week-items{font-size:11px;color:var(--muted);line-height:1.7}
+
+/* emergency banner */
+.emergency{background:linear-gradient(135deg,rgba(240,96,96,.1),rgba(240,169,64,.05));border:1px solid rgba(240,96,96,.25);border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start}
+.emergency-icon{font-size:20px;flex-shrink:0;margin-top:1px}
+.emergency-title{font-size:13px;font-weight:600;color:var(--red);margin-bottom:4px}
+.emergency-body{font-size:12px;color:var(--muted);line-height:1.5}
+
+/* footer */
+footer{text-align:center;padding:24px 16px;color:var(--dim);font-size:11px;font-family:'JetBrains Mono',monospace;border-top:1px solid var(--border);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<header>
+  <div class="header-top">
+    <div>
+      <div class="header-title">SSC <span>A+</span> Battle Plan</div>
+      <div class="header-sub">Pre-test: 25 Jun 2026 · 11 subjects · 149 chapters</div>
+    </div>
+    <div class="countdown-pill">
+      <div class="countdown-num" id="days">43</div>
+      <div class="countdown-label">days left</div>
+    </div>
+  </div>
+  <div class="tabs-scroll">
+    <button class="tab active" onclick="go('overview',this)">Overview</button>
+    <button class="tab" onclick="go('phases',this)">Phases</button>
+    <button class="tab" onclick="go('daily',this)">Daily plan</button>
+    <button class="tab" onclick="go('subjects',this)">Subjects</button>
+    <button class="tab" onclick="go('tips',this)">A+ tips</button>
+  </div>
+</header>
+
+<div class="content">
+
+<!-- OVERVIEW -->
+<div id="overview" class="section active">
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Days left</div><div class="stat-val blue" id="days2">43</div></div>
+    <div class="stat"><div class="stat-label">Total chapters</div><div class="stat-val purple">149</div></div>
+    <div class="stat"><div class="stat-label">Free days</div><div class="stat-val green">9</div></div>
+    <div class="stat"><div class="stat-label">Self-study hrs/day</div><div class="stat-val amber">~5h</div></div>
+  </div>
+
+  <div class="emergency">
+    <div class="emergency-icon">⚡</div>
+    <div>
+      <div class="emergency-title">Your 9 free days are everything</div>
+      <div class="emergency-body">May 25 – Jun 2 with no school is your most powerful weapon. Use them to finish all science + math chapters before school restarts. This alone can decide your A+.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Subject priority map</div>
+    <div class="prow">
+      <div class="prow-name">Math + H.Math</div>
+      <div class="prow-info">31 chapters, daily practice needed</div>
+      <span class="pill pill-r">Daily</span>
+    </div>
+    <div class="prow">
+      <div class="prow-name">Physics</div>
+      <div class="prow-info">13 ch, formula + numericals</div>
+      <span class="pill pill-r">Daily</span>
+    </div>
+    <div class="prow">
+      <div class="prow-name">Chemistry</div>
+      <div class="prow-info">12 ch, equations + MCQ heavy</div>
+      <span class="pill pill-r">Daily</span>
+    </div>
+    <div class="prow">
+      <div class="prow-name">Biology</div>
+      <div class="prow-info">14 ch, diagrams + memory</div>
+      <span class="pill pill-a">High</span>
+    </div>
+    <div class="prow">
+      <div class="prow-name">BGS</div>
+      <div class="prow-info">15 ch, bullet notes strategy</div>
+      <span class="pill pill-a">High</span>
+    </div>
+    <div class="prow">
+      <div class="prow-name">Bangla 1st</div>
+      <div class="prow-info">15 story + 15 poem + 2 acting</div>
+      <span class="pill pill-b">Medium</span>
+    </div>
+    <div class="prow">
+      <div class="prow-name">Bangla 2nd</div>
+      <div class="prow-info">43 MCQ lessons + 6 types</div>
+      <span class="pill pill-b">Medium</span>
+    </div>
+    <div class="prow">
+      <div class="prow-name">English 1st + 2nd</div>
+      <div class="prow-info">11 + 13 writing types</div>
+      <span class="pill pill-b">Medium</span>
+    </div>
+    <div class="prow">
+      <div class="prow-name">IME</div>
+      <div class="prow-info">5 chapters, conceptual</div>
+      <span class="pill pill-g">Lower</span>
+    </div>
+    <div class="prow">
+      <div class="prow-name">ICT</div>
+      <div class="prow-info">6 ch, MCQ only — easiest</div>
+      <span class="pill pill-g">Lowest</span>
+    </div>
+  </div>
+
+  <div class="week-grid">
+    <div class="week-card">
+      <div class="week-label">Phase 1</div>
+      <div class="week-title" style="color:var(--blue)">Full blast</div>
+      <div class="week-items">May 25 – Jun 2<br>9 free days<br>10–12 hrs/day</div>
+    </div>
+    <div class="week-card">
+      <div class="week-label">Phase 2</div>
+      <div class="week-title" style="color:var(--amber)">Steady grind</div>
+      <div class="week-items">Jun 3 – Jun 15<br>School resumes<br>~5 hrs/day</div>
+    </div>
+    <div class="week-card">
+      <div class="week-label">Phase 3</div>
+      <div class="week-title" style="color:var(--purple)">Revision sprint</div>
+      <div class="week-items">Jun 16 – Jun 22<br>No new chapters<br>Past papers only</div>
+    </div>
+    <div class="week-card">
+      <div class="week-label">Phase 4</div>
+      <div class="week-title" style="color:var(--green)">Final calm</div>
+      <div class="week-items">Jun 23 – Jun 24<br>Light review<br>Sleep 8+ hours</div>
+    </div>
+  </div>
+</div>
+
+<!-- PHASES -->
+<div id="phases" class="section">
+  <div class="phase phase-blue">
+    <div class="phase-num">Phase 1</div>
+    <div class="phase-title" style="color:var(--blue-bright)">Full blast</div>
+    <div class="phase-date">May 25 – Jun 2 · 9 free days</div>
+    <div class="phase-desc">No school. Study 10–12 hours/day. Cover all heavy science + math chapters in first pass. This is your golden window.</div>
+    <div class="pills-wrap">
+      <span class="pill pill-b">Math ch 1–9</span>
+      <span class="pill pill-b">H.Math ch 1–7</span>
+      <span class="pill pill-b">Physics ch 1–7</span>
+      <span class="pill pill-b">Chemistry ch 1–6</span>
+      <span class="pill pill-b">Biology ch 1–7</span>
+      <span class="pill pill-b">BGS ch 1–8</span>
+    </div>
+    <div class="pbar-wrap">
+      <div class="pbar-bg"><div class="pbar-fill" style="width:35%;background:var(--blue)"></div></div>
+      <div class="pbar-label">Goal: 35% syllabus done by Jun 2</div>
+    </div>
+  </div>
+
+  <div class="phase phase-amber">
+    <div class="phase-num">Phase 2</div>
+    <div class="phase-title" style="color:var(--amber)">Steady grind</div>
+    <div class="phase-date">Jun 3 – Jun 15 · school days</div>
+    <div class="phase-desc">School 8–3, tutors 3h. Use 6–7:30am and 7–9:30pm for self study. Finish all remaining chapters.</div>
+    <div class="pills-wrap">
+      <span class="pill pill-a">Math ch 10–17</span>
+      <span class="pill pill-a">H.Math ch 8–14</span>
+      <span class="pill pill-a">Physics ch 8–13</span>
+      <span class="pill pill-a">Chemistry ch 7–12</span>
+      <span class="pill pill-a">Bio ch 8–14</span>
+      <span class="pill pill-a">BGS ch 9–15</span>
+      <span class="pill pill-a">Bangla + English</span>
+      <span class="pill pill-a">IME + ICT</span>
+    </div>
+    <div class="pbar-wrap">
+      <div class="pbar-bg"><div class="pbar-fill" style="width:100%;background:var(--amber)"></div></div>
+      <div class="pbar-label">Goal: 100% chapters covered by Jun 15</div>
+    </div>
+  </div>
+
+  <div class="phase phase-purple">
+    <div class="phase-num">Phase 3</div>
+    <div class="phase-title" style="color:var(--purple)">Revision sprint</div>
+    <div class="phase-date">Jun 16 – Jun 22</div>
+    <div class="phase-desc">Zero new chapters. Only revision, past board MCQ drills, weak spots, mock tests, and writing practice.</div>
+    <div class="pills-wrap">
+      <span class="pill pill-p">Full revision</span>
+      <span class="pill pill-p">Board past MCQs</span>
+      <span class="pill pill-p">Math problem sets</span>
+      <span class="pill pill-p">English writing</span>
+      <span class="pill pill-p">Bangla poem lines</span>
+      <span class="pill pill-p">Bio diagrams</span>
+    </div>
+    <div class="pbar-wrap">
+      <div class="pbar-bg"><div class="pbar-fill" style="width:100%;background:var(--purple)"></div></div>
+      <div class="pbar-label">Goal: Full syllabus revised once by Jun 22</div>
+    </div>
+  </div>
+
+  <div class="phase phase-green">
+    <div class="phase-num">Phase 4</div>
+    <div class="phase-title" style="color:var(--green)">Final calm</div>
+    <div class="phase-date">Jun 23 – Jun 24</div>
+    <div class="phase-desc">Light revision only. 8+ hours sleep. Zero new topics. Eat well. Confidence mode.</div>
+    <div class="pills-wrap">
+      <span class="pill pill-g">Formula sheet review</span>
+      <span class="pill pill-g">Re-read short notes</span>
+      <span class="pill pill-g">Sleep by 9:30pm</span>
+      <span class="pill pill-g">No new chapters</span>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>The 9 free days in Phase 1 are worth more than any other period.</strong> A student who uses those days properly enters school season already 35% done — that is a massive competitive advantage over classmates.
+  </div>
+</div>
+
+<!-- DAILY -->
+<div id="daily" class="section">
+  <div class="sec-title">Free days — May 25 to Jun 2</div>
+
+  <div class="schedule-card">
+    <div class="schedule-header"><div class="dot" style="background:var(--amber)"></div>Morning</div>
+    <div class="slot"><span class="slot-time">6:30–7:00</span><span class="slot-text">Wake up, freshen up, light breakfast</span></div>
+    <div class="slot"><span class="slot-time">7:00–9:30</span><span class="slot-text"><em>Session 1</em> — Math or Physics (hardest first, brain is freshest)</span></div>
+    <div class="slot"><span class="slot-time">9:30–9:45</span><span class="slot-text">Short break, stretch, water</span></div>
+    <div class="slot"><span class="slot-time">9:45–12:15</span><span class="slot-text"><em>Session 2</em> — Chemistry or H.Math</span></div>
+  </div>
+
+  <div class="schedule-card">
+    <div class="schedule-header"><div class="dot" style="background:var(--green)"></div>Afternoon</div>
+    <div class="slot"><span class="slot-time">12:15–2:00</span><span class="slot-text"><strong>Lunch + prayer + nap</strong> — mandatory! Brain consolidates during rest</span></div>
+    <div class="slot"><span class="slot-time">2:00–4:30</span><span class="slot-text"><em>Session 3</em> — Biology or BGS</span></div>
+    <div class="slot"><span class="slot-time">4:30–4:45</span><span class="slot-text">Break + snack + fresh air</span></div>
+    <div class="slot"><span class="slot-time">4:45–6:30</span><span class="slot-text"><em>Session 4</em> — Bangla or English (reading + writing practice)</span></div>
+  </div>
+
+  <div class="schedule-card">
+    <div class="schedule-header"><div class="dot" style="background:var(--purple)"></div>Evening</div>
+    <div class="slot"><span class="slot-time">6:30–7:30</span><span class="slot-text">Prayer, dinner, short walk outside</span></div>
+    <div class="slot"><span class="slot-time">7:30–9:00</span><span class="slot-text"><em>Session 5</em> — MCQ drill (Bangla 2nd / ICT / BGS / IME)</span></div>
+    <div class="slot"><span class="slot-time">9:00–9:30</span><span class="slot-text">Write 5 things you learned today + plan tomorrow's sessions</span></div>
+    <div class="slot"><span class="slot-time">9:30 pm</span><span class="slot-text"><strong>SLEEP</strong> — 8h minimum. This is when memory gets stored permanently</span></div>
+  </div>
+
+  <div class="sec-title" style="margin-top:8px">School days — Jun 3 onwards</div>
+  <div class="tip">School 8–3 + tutors 3h = only ~3.5h for yourself. Protect your 6am and 7pm slots like your A+ depends on it — because it does.</div>
+
+  <div class="schedule-card">
+    <div class="schedule-header"><div class="dot" style="background:var(--amber)"></div>Morning — before school</div>
+    <div class="slot"><span class="slot-time">6:00–7:30</span><span class="slot-text"><em>Self study</em> — hardest subject (Math or Science). This is gold time.</span></div>
+    <div class="slot"><span class="slot-time">7:30–8:00</span><span class="slot-text">Get ready + quick scan of yesterday's notes</span></div>
+  </div>
+
+  <div class="schedule-card">
+    <div class="schedule-header"><div class="dot" style="background:var(--blue)"></div>School + tutors</div>
+    <div class="slot"><span class="slot-time">8:00–3:00</span><span class="slot-text">School — stay active, take notes, ask questions</span></div>
+    <div class="slot"><span class="slot-time">Lunch break</span><span class="slot-text">10 MCQs on paper/phone — Bangla 2nd or BGS or ICT</span></div>
+    <div class="slot"><span class="slot-time">3:00–3:30</span><span class="slot-text">Break + snack (mandatory rest before tutors)</span></div>
+    <div class="slot"><span class="slot-time">3:30–6:30</span><span class="slot-text"><em>Private tutor sessions</em> (3 hours)</span></div>
+  </div>
+
+  <div class="schedule-card">
+    <div class="schedule-header"><div class="dot" style="background:var(--purple)"></div>Evening — self study</div>
+    <div class="slot"><span class="slot-time">6:30–7:15</span><span class="slot-text">Prayer, dinner, short walk</span></div>
+    <div class="slot"><span class="slot-time">7:15–8:45</span><span class="slot-text"><em>Self study</em> — memory subjects: BGS / Bangla / English</span></div>
+    <div class="slot"><span class="slot-time">8:45–9:15</span><span class="slot-text">Review tomorrow's plan + mistake diary entry</span></div>
+    <div class="slot"><span class="slot-time">9:30 pm</span><span class="slot-text"><strong>SLEEP</strong> — non-negotiable for A+ memory</span></div>
+  </div>
+</div>
+
+<!-- SUBJECTS -->
+<div id="subjects" class="section">
+  <div class="sec-title">Strategy per subject</div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--red)">Math + H.Math</div><span class="subj-ch">17 + 14 chapters</span></div>
+    <div class="subj-body">Do minimum 5 board-style problems per chapter every single day — no exceptions. Start easier chapters first to build confidence, then tackle the hard ones. Every wrong answer goes into your mistake diary and gets redone next session until correct. Never skip Math, even for 1 day.</div>
+    <div class="tags"><span class="pill pill-r">Daily practice</span><span class="pill pill-r">Board questions only</span><span class="pill pill-r">Mistake redo diary</span></div>
+  </div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--red)">Physics</div><span class="subj-ch">13 chapters</span></div>
+    <div class="subj-body">Make a single one-page formula sheet and read it every morning. Solve at least 3 numericals per session. Draw all circuit/ray diagrams yourself — don't just look at them. Physics MCQs are very pattern-based; collect last 7 years of SSC board MCQs and drill them repeatedly.</div>
+    <div class="tags"><span class="pill pill-r">Formula sheet</span><span class="pill pill-r">Numericals daily</span><span class="pill pill-r">Board MCQ patterns</span></div>
+  </div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--amber)">Chemistry</div><span class="subj-ch">12 chapters</span></div>
+    <div class="subj-body">Make flashcards for every chemical equation and reaction. Understand why reactions happen — don't just memorize. Chemistry is one of the highest-scoring MCQ subjects if you nail the patterns. Past board MCQs repeat almost identically year to year.</div>
+    <div class="tags"><span class="pill pill-a">Equation flashcards</span><span class="pill pill-a">Understand reactions</span><span class="pill pill-a">Board MCQ drill</span></div>
+  </div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--amber)">Biology</div><span class="subj-ch">14 chapters</span></div>
+    <div class="subj-body">Draw and label every diagram yourself — this is the key to Biology. Make a master process chart for photosynthesis, respiration, cell division, digestion etc. Biology MCQs repeat very heavily; past papers are essential. Aim to draw 2 diagrams per session.</div>
+    <div class="tags"><span class="pill pill-a">Draw diagrams daily</span><span class="pill pill-a">Process charts</span><span class="pill pill-a">Past board MCQs</span></div>
+  </div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--blue-bright)">BGS</div><span class="subj-ch">15 chapters</span></div>
+    <div class="subj-body">Read once, then make very short bullet-point notes — maximum 1 page per chapter. From that point, only revise your notes, not the full textbook. This saves massive time. Target 2 chapters per day in Phase 1; all 15 will be done in 8 days.</div>
+    <div class="tags"><span class="pill pill-b">Bullet notes</span><span class="pill pill-b">2 chapters/day</span><span class="pill pill-b">Revise notes only</span></div>
+  </div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--blue-bright)">Bangla 1st</div><span class="subj-ch">15+15+2</span></div>
+    <div class="subj-body">For each story: author name, year, theme, 3 key events. For poems: author, theme, 2–3 important lines to memorize. For acting pieces: understand the scene and characters deeply. Group similar themes to remember faster. Do 3 pieces per day in Phase 1.</div>
+    <div class="tags"><span class="pill pill-b">Author + year + theme</span><span class="pill pill-b">Key poem lines</span><span class="pill pill-b">3 pieces/day</span></div>
+  </div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--blue-bright)">Bangla 2nd</div><span class="subj-ch">43 MCQ + 6 types</span></div>
+    <div class="subj-body">Do 10 MCQ lessons per day during free days — all 43 done in under 5 days. For the 6 writing types (summary, paragraph, etc.), practice one full piece every 2 days. Collect model answers and internalize the structure cold.</div>
+    <div class="tags"><span class="pill pill-b">10 MCQ lessons/day</span><span class="pill pill-b">1 writing type/2 days</span></div>
+  </div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--blue-bright)">English 1st + 2nd</div><span class="subj-ch">11 + 13 types</span></div>
+    <div class="subj-body">Learn one writing format every 2 days — letter, email, story, paragraph, dialogue, report. Collect and memorize the structure of model answers. For English 2nd grammar, do gap-fill and sentence correction from past papers daily in the last 2 weeks before pre-test.</div>
+    <div class="tags"><span class="pill pill-b">1 format per 2 days</span><span class="pill pill-b">Model answer structure</span><span class="pill pill-b">Past paper grammar</span></div>
+  </div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--green)">IME</div><span class="subj-ch">5 chapters</span></div>
+    <div class="subj-body">Cover in Phase 2 at 1 chapter per day — done in 5 days. Mostly conceptual, so reading + short notes is enough. Don't over-invest here when sciences need more time.</div>
+    <div class="tags"><span class="pill pill-g">1 chapter/day</span><span class="pill pill-g">Phase 2 only</span></div>
+  </div>
+
+  <div class="subj-card">
+    <div class="subj-header"><div class="subj-name" style="color:var(--green)">ICT</div><span class="subj-ch">6 chapters, MCQ only</span></div>
+    <div class="subj-body">Easiest subject. Do past board MCQs only — 1 hour per chapter is genuinely enough. Cover last in Phase 2. Zero stress here. The time saved goes to Math and Science.</div>
+    <div class="tags"><span class="pill pill-g">Past MCQs only</span><span class="pill pill-g">1h per chapter</span><span class="pill pill-g">Last priority</span></div>
+  </div>
+</div>
+
+<!-- TIPS -->
+<div id="tips" class="section">
+  <div class="sec-title">Habits that make A+ students</div>
+
+  <div class="tip-card">
+    <div class="tip-card-title">📓 The 3-notebook system</div>
+    <div class="tip-card-body">Keep three notebooks. Notebook 1: main notes while learning. Notebook 2: one-page formula and key-point sheet per subject — read this every morning. Notebook 3: mistake diary — every wrong MCQ and every mistake gets written here, then redone until correct. The mistake diary is where A+ students are made.</div>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-card-title">⏱️ 45-minute focus blocks</div>
+    <div class="tip-card-body">Study for exactly 45 minutes, then take a 10-minute break — stand up, walk, drink water. Repeat. Never sit for more than 2 hours straight. Your brain stops absorbing after that. Memory consolidates during rest, not during study.</div>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-card-title">📋 Weekly self-test every Sunday</div>
+    <div class="tip-card-body">Every Sunday, close your notes and test yourself on the week's material for 1 hour. No peeking. This forces real recall and reveals exactly what you don't know. This one habit separates A+ students from everyone else — the brain only truly learns what it is forced to retrieve.</div>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-card-title">🎯 Board question obsession</div>
+    <div class="tip-card-body">Collect the last 7 years of SSC Dhaka board questions for every subject. In Bangladeshi boards, 60–70% of MCQs repeat in patterns year after year. For math and science, almost all question structures repeat. Working through these is not shortcutting — it's the smartest thing you can do.</div>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-card-title">💤 Sleep = free extra marks</div>
+    <div class="tip-card-body">Sleep 7.5–8 hours every single night. Your brain moves short-term memory into permanent storage during deep sleep. Students who cut sleep to study more actually remember significantly less the next day. Bed by 9:30pm, wake at 6am. This is not optional — it is a study technique.</div>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-card-title">📵 Phone in another room</div>
+    <div class="tip-card-body">During every study session, put your phone in a different room — not face down, not silent, in another room. Each notification breaks 20 minutes of deep focus. 43 days of phone discipline equals A+ for life. Use phone only during scheduled 10-minute breaks.</div>
+  </div>
+
+  <div class="tip-card">
+    <div class="tip-card-title">🍽️ Eat and drink properly</div>
+    <div class="tip-card-body">Your brain uses 20% of your body's energy. Eat proper meals — don't skip lunch. Drink water constantly while studying. Dehydration of even 1–2% measurably reduces concentration and memory. Keep a water bottle on your desk at all times.</div>
+  </div>
+
+  <div class="tip" style="margin-top:4px;text-align:center">
+    <strong>A+ doesn't come from studying the most hours.</strong> It comes from studying the right things, the right way, consistently. Follow this plan and you will get there. You can do this. 🏆
+  </div>
+</div>
+
+</div><!-- end content -->
+
+<footer>Made for your SSC 2026 journey · Pre-test: 25 Jun 2026</footer>
+
+<script>
+function go(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function updateCountdown() {
+  const target = new Date('2026-06-25T00:00:00');
+  const now = new Date();
+  const diff = Math.ceil((target - now) / (1000 * 60 * 60 * 24));
+  const val = diff > 0 ? diff : 0;
+  document.getElementById('days').textContent = val;
+  document.getElementById('days2').textContent = val;
+}
+updateCountdown();
+</script>
+</body>
+</html>
